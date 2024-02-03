@@ -1,12 +1,15 @@
 import keyboard
 import time
 from pynput import mouse
-from PIL import ImageGrab
-import pyautogui
+from PIL import ImageGrab, Image
 import requests
 import os
 import pyperclip
 import configparser
+import pystray
+import pyautogui
+
+image = Image.open("ssicon48.png")
 
 config = configparser.ConfigParser()
 
@@ -44,6 +47,13 @@ def takeScreenShot(x1, y1, x2, y2):
     screenshot.save(filename)
     uploadScreenshot(filename)
 
+def takeWholeScreenShot():
+    screenshot = pyautogui.screenshot()
+    timestamp = int(time.time())
+    filename = f"screenshot_{timestamp}.png"
+    screenshot.save(filename)
+    uploadScreenshot(filename)  
+
 def uploadScreenshot(imagefname):
     global api_key
     image_path = imagefname
@@ -71,6 +81,16 @@ def screenshotBounds(x, y, button, pressed):
             ssy2 = y
             screenshotMode = False
             takeScreenShot(ssx1, ssy1, ssx2, ssy2)
+
+def exitSaeko():
+    icon.stop()
+    os._exit(0)
+
+icon = pystray.Icon("SaekoShot", image, menu=pystray.Menu(
+    pystray.MenuItem("Capture Screen", takeWholeScreenShot),
+    pystray.MenuItem("Exit", exitSaeko)
+))
+icon.run()
 
 keyboard.add_hotkey("ctrl+shift+z", toggleScreenshotMode)
 

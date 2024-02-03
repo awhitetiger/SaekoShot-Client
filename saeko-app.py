@@ -90,7 +90,7 @@ icon = pystray.Icon("SaekoShot", image, menu=pystray.Menu(
     pystray.MenuItem("Capture Screen", takeWholeScreenShot),
     pystray.MenuItem("Exit", exitSaeko)
 ))
-icon.run()
+icon.run_detached()
 
 keyboard.add_hotkey("ctrl+shift+z", toggleScreenshotMode)
 
